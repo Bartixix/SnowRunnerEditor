@@ -6,4 +6,4 @@ It is a file containing all of `SnowRunner's` confings, truck data, language dat
 # Why patch the game instead of creating a mod?
 To my knowladge, it is imposible to modify any in-game trucks with ordinary mods. You can create modded copies of existing trucks and add features to them, but sometimes if you want to modify a lot of different things you can end up with a lot of duplicate trucks.
 # Current alternative to this app
-You can use [SnowRunnerPakTool](https://github.com/Bartixix/SnowRunnerEditor), but it requires manual modification of `.xml` game files, which may be a pain if you don't know the language syntax.
+You can use [SnowRunnerPakTool](https://github.com/Bartixix/SnowRunnerTools), but it requires manual modification of `.xml` game files, which may be a pain if you don't know the language syntax.
