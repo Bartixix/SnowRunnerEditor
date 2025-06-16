@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SnowRunnerEditor (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SnowRunnerEditor (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
