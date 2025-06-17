@@ -1,4 +1,4 @@
-﻿namespace SnowRunnerEditor.Game
+﻿namespace SnowRunnerEditor.Game.LoadList
 {
     internal abstract class LoadListEntry
     {

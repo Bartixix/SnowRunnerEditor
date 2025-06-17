@@ -1,4 +1,6 @@
-﻿namespace SnowRunnerEditor.Game
+﻿using SnowRunnerEditor.Game.LoadList;
+
+namespace SnowRunnerEditor.Game.Pak
 {
     internal class PakFileNameComparer : IComparer<string>
     {

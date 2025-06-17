@@ -1,6 +1,13 @@
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using SnowRunnerEditor.Game;
+using Microsoft.UI.Xaml.Media;
+using SnowRunnerEditor.Game.Pak;
+using SnowRunnerEditor.Src;
+using SnowRunnerEditor.Src.Project;
+using SnowRunnerEditor.Views.ProjectCreation;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -14,58 +21,68 @@ namespace SnowRunnerEditor.Views
         public NavBar()
         {
             InitializeComponent();
-
         }
 
-        //Test functions
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        private async void TestFunc(object sender, RoutedEventArgs e)
+        private async void LoadProject(object sender, RoutedEventArgs e)
         {
-            FileInfo initial = new("C:\\Users\\barti\\Desktop\\snowrnn_test\\initial.pak");
-            DirectoryInfo folder = new("C:\\Users\\barti\\Desktop\\snowrnn_test\\unpack");
-            FileInfo target = new("C:\\Users\\barti\\Desktop\\snowrnn_test\\initial-made.pak");
-
-            PakHelper pk = new(initial, folder, true);
-            await pk.Unpack();
-
-            pk.AddDeafaultLoadList();
-
-            PakHelper pk2 = new(target, folder, true);
-            await pk2.Pack();
+            FileInfo projectFile = await IOHepler.GetFileFromDialog(MainWindow.WindowHandle, [".json", "*"]);
+            await IOHepler.LoadProjectFromJSON(projectFile);            
         }
 
-        private async void TestFunc2(object sender, RoutedEventArgs e)
+        private async void CreateProject(object sender, RoutedEventArgs e)
         {
-            //StorageFolder first = await StorageFolder.GetFolderFromPathAsync("C:\\Users\\barti\\Desktop\\snwrnncmb\\1");
-            //StorageFolder second = await StorageFolder.GetFolderFromPathAsync("C:\\Users\\barti\\Desktop\\snwrnncmb\\2");
+            ProjectCreateControl projectCreateContorl = new();
+            ProjectCreateAdvanced projectCreateAdvanced = new();
 
-            //StorageFile firstFile = await StorageFile.GetFileFromPathAsync("C:\\Users\\barti\\Desktop\\snwrnncmb\\new.pak");
-            //StorageFile secondFile = await StorageFile.GetFileFromPathAsync("C:\\Users\\barti\\Desktop\\snwrnncmb\\old.pak");
+            ContentDialog dialogMain = new()
+            {
+                Title = "New Project",
+                PrimaryButtonText = "Create",
+                CloseButtonText = "Cancel",
+                Content = projectCreateContorl,
+                XamlRoot = Content.XamlRoot
+            };
 
-            //PakHelper pk1 = new(firstFile, first);
-            //PakHelper pk2 = new(secondFile, second);
-            //await pk1.Unpack();
-            //await pk2.Unpack();
+            ContentDialog dialogAdvanced = new()
+            {
+                Title = "Advanced Settings",
+                PrimaryButtonText = "Accept",
+                CloseButtonText = "Cancel",
+                Content = projectCreateAdvanced,
+                XamlRoot = Content.XamlRoot
+            };
 
-            //await pk1.AddDeafaultLoadList();
-            //await pk2.AddDeafaultLoadList();
+            dialogMain.PrimaryButtonClick += CheckMainCreateDialogState;
 
-            //DirectoryComparer drc = new(first, second);
-            //await drc.CompareDirectories();
+            ContentDialogResult mainRes = await dialogMain.ShowAsync();
+            if (mainRes == ContentDialogResult.Secondary) return;
 
-            //List<StorageFile> differnet = drc.DifferentFiles;
-            //List<StorageFile> oldFiles = drc.OldFiles;
-            //List<StorageFile> newFiles = drc.NewFiles;
-
-            //using FileStream fsDifferent = new("C:\\Users\\barti\\Desktop\\snwrnncmb\\diff.txt", FileMode.CreateNew, FileAccess.Write, FileShare.Read);
-            //using FileStream fsNew = new("C:\\Users\\barti\\Desktop\\snwrnncmb\\new.txt", FileMode.CreateNew, FileAccess.Write, FileShare.Read);
-            //using FileStream fsOld = new("C:\\Users\\barti\\Desktop\\snwrnncmb\\old.txt", FileMode.CreateNew, FileAccess.Write, FileShare.Read);
-
-            //Write(fsDifferent, differnet);
-            //Write(fsOld, oldFiles);
-            //Write(fsNew, newFiles);
-
+            ContentDialogResult advRes = await dialogAdvanced.ShowAsync();
+            if (advRes == ContentDialogResult.Secondary) return;
         }
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        
+        private void CheckMainCreateDialogState(ContentDialog dialog, ContentDialogButtonClickEventArgs e)
+        {            
+            ProjectCreateControl projectCreateControl = (ProjectCreateControl)dialog.Content;
+
+            bool allowContinue = true;
+            SolidColorBrush brush = new(Colors.Red);
+
+            List<ProjectCreateControl.TextBoxId> excludedBoxes = [
+                ProjectCreateControl.TextBoxId.InitialBox,
+                ];
+
+            foreach (KeyValuePair<ProjectCreateControl.TextBoxId, ErrorTextBox> item in projectCreateControl.ErrorBoxes)
+            {
+                if (!excludedBoxes.Contains(item.Key) && item.Value.Text == "")
+                {
+                    allowContinue = false;
+                    item.Value.SetVisualError(true, brush);
+                }
+            }
+
+            if (!allowContinue)
+                e.Cancel = true;            
+        }        
     }
 }

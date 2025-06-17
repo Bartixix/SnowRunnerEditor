@@ -1,6 +1,6 @@
-﻿using Microsoft.UI.Xaml;
-using SnowRunnerEditor.Game;
-
+﻿using SnowRunnerEditor.Game.Pak;
+using SnowRunnerEditor.Src.Project;
+using System.Text.Json;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
 
@@ -28,20 +28,43 @@ namespace SnowRunnerEditor.Src
             return [.. files.OrderBy(f => f.Value, PakFileNameComparer.Instance)];
         }
 
-        public static async Task<FileInfo> GetFileFromDialog(Window wnd, List<string> fileTypes)
+        public static async Task<FileInfo> GetFileFromDialog(IntPtr hwnd, List<string> fileTypes)
         {
             FileOpenPicker picker = new()
             {
                 ViewMode = PickerViewMode.List,
+                
             };
 
-            var hwnd = WindowNative.GetWindowHandle(wnd);
             fileTypes.ForEach(picker.FileTypeFilter.Add);
 
             InitializeWithWindow.Initialize(picker, hwnd);
 
-            StorageFile res = await picker.PickSingleFileAsync();
-            return new(res.Path);
+            StorageFile? res = await picker.PickSingleFileAsync();
+            return res == null ? throw new Exception("Missing File") : new(res.Path);
+        }
+
+        public static async Task<DirectoryInfo> GetDirectoryFromDialog(IntPtr hwnd)
+        {
+            FolderPicker picker = new()
+            {
+                ViewMode = PickerViewMode.List,
+                FileTypeFilter = { "*" }
+            };
+
+            InitializeWithWindow.Initialize(picker, hwnd);
+
+            StorageFolder ret = await picker.PickSingleFolderAsync();
+            return new(ret.Path);
+        }
+
+
+        public static async Task LoadProjectFromJSON(FileInfo file)
+        {
+            using FileStream json = file.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
+            ProjectStorage storage = await JsonSerializer.DeserializeAsync<ProjectStorage>(json) ?? throw new InvalidDataException();
+
+            ProjectHelper.LoadProject(storage);
         }
     }
 }

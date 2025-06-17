@@ -15,6 +15,10 @@
   <ItemGroup>
     <None Remove="Views\Editor.xaml" />
     <None Remove="Views\NavBar.xaml" />
+    <None Remove="Views\ProjectCreateControl.xaml" />
+    <None Remove="Views\ProjectCreation\ExtendedCheckBox.xaml" />
+    <None Remove="Views\ProjectCreation\ExtendedTxtBox.xaml" />
+    <None Remove="Views\ProjectCreation\ProjectCreateAdvanced.xaml" />
     <None Remove="Views\SideBar.xaml" />
   </ItemGroup>
 
@@ -45,6 +49,26 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\ProjectCreation\ProjectCreateAdvanced.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\ProjectCreation\ExtendedCheckBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\ProjectCreation\ExtendedTxtBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\FileSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\Editor.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -56,6 +80,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\NavBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\ProjectCreateControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

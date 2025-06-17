@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Media;
 using SnowRunnerEditor.Views;
 using Windows.Foundation;
 using Windows.Graphics;
+using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -16,9 +17,13 @@ namespace SnowRunnerEditor
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        public static IntPtr WindowHandle { get; private set; }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            WindowHandle = WindowNative.GetWindowHandle(this);
 
             InitTitleBar();
         }

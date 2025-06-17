@@ -1,11 +1,12 @@
-﻿using SnowRunnerEditor.Src;
+﻿using SnowRunnerEditor.Game.LoadList;
+using SnowRunnerEditor.Src;
 
 using System.Diagnostics.CodeAnalysis;
 
 using System.IO.Compression;
 
 
-namespace SnowRunnerEditor.Game
+namespace SnowRunnerEditor.Game.Pak
 {
     internal sealed class PakHelper
     {

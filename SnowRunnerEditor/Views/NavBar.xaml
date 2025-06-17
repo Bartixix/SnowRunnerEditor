@@ -16,11 +16,11 @@
         <MenuBar Grid.Column="0" x:Name="pMenuBar">
             <MenuBarItem Title="File">
                 <MenuFlyoutSubItem Text="Project">
-                    <MenuFlyoutItem Text="Open"/>
-                    <MenuFlyoutItem Text="Create"/>
+                    <MenuFlyoutItem Text="Open" Click="LoadProject"/>
+                    <MenuFlyoutItem Text="Create" Click="CreateProject"/>
                 </MenuFlyoutSubItem>
-                <MenuFlyoutItem Text="TestFunc" Click="TestFunc"/>
-                <MenuFlyoutItem Text="TestFunc2" Click="TestFunc2"/>
+                <!--<MenuFlyoutItem Text="TestFunc" Click="TestFunc"/>
+                <MenuFlyoutItem Text="TestFunc2" Click="TestFunc2"/>-->
                 <MenuFlyoutSeparator/>
                 <MenuFlyoutItem Text="Exit"/>
             </MenuBarItem>

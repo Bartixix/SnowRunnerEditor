@@ -1,4 +1,6 @@
-﻿namespace SnowRunnerEditor.Game
+﻿using SnowRunnerEditor.Game.Pak;
+
+namespace SnowRunnerEditor.Game.LoadList
 {
     internal class LoadListHelper
     {
