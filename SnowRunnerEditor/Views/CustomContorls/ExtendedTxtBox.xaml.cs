@@ -16,15 +16,22 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SnowRunnerEditor.Views.ProjectCreation
+namespace SnowRunnerEditor.Views.CustomContorls
 {
-    public sealed partial class ExtendedCheckBox : UserControl
+    public sealed partial class ExtendedTxtBox : UserControl
     {
+        public ErrorTextBox TextBox => TxtBox;
+
+        public bool Required { get { return TxtBox.Required; } set { TxtBox.Required = value; } }
+
         public string Label { get; set; } = string.Empty;
 
-        public ExtendedCheckBox()
+        public ExtendedTxtBox()
         {
             InitializeComponent();
+
+            TxtBox.TextChanged += TxtBox.CheckTextError;
+            TxtBox.LostFocus += TxtBox.CheckFocusError;
         }
     }
 }

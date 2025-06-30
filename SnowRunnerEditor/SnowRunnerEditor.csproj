@@ -16,9 +16,8 @@
     <None Remove="Views\Editor.xaml" />
     <None Remove="Views\NavBar.xaml" />
     <None Remove="Views\ProjectCreateControl.xaml" />
-    <None Remove="Views\ProjectCreation\ExtendedCheckBox.xaml" />
-    <None Remove="Views\ProjectCreation\ExtendedTxtBox.xaml" />
-    <None Remove="Views\ProjectCreation\ProjectCreateAdvanced.xaml" />
+    <None Remove="Views\CustomContorls\ExtendedCheckBox.xaml" />
+    <None Remove="Views\CustomContorls\ExtendedTxtBox.xaml" />
     <None Remove="Views\SideBar.xaml" />
   </ItemGroup>
 
@@ -47,6 +46,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4188" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250513003" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\InputControlBuilder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\ProjectCreation\ProjectCreateAdvanced.xaml">
@@ -104,5 +108,6 @@
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+    <WindowsPackageType>None</WindowsPackageType>
   </PropertyGroup>
 </Project>

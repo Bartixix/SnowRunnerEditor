@@ -9,12 +9,13 @@ using Windows.UI;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SnowRunnerEditor.Views.ProjectCreation
+namespace SnowRunnerEditor.Views.CustomContorls
 {
     public sealed partial class ItemSelector : UserControl
     {
         public string Label { get; set; } = string.Empty;
         public string Text { get; set; } = string.Empty;
+        public bool Required {get { return TxtBox.Required; } set {  TxtBox.Required = value; } }
 
         public List<string> ExtensionList { get; private set; } = [];
         public string FileExtensions { set { ExtensionList = [.. value.Replace(" ", "").Split(",")]; } }
@@ -37,6 +38,9 @@ namespace SnowRunnerEditor.Views.ProjectCreation
             InitializeComponent();
 
             DefaultBorder = TxtBox.BorderBrush;
+
+            TxtBox.TextChanged += TxtBox.CheckTextError;
+            TxtBox.LostFocus += TxtBox.CheckFocusError;
         }
 
         private async void Select(object sender, RoutedEventArgs e)
@@ -48,8 +52,8 @@ namespace SnowRunnerEditor.Views.ProjectCreation
 
             if(PickType == PickTypeSelector.Folder) 
                 TxtBox.Text = (await IOHepler.GetDirectoryFromDialog(MainWindow.WindowHandle)).FullName;
-        }
 
-        
+            TxtBox.CheckTextError(TxtBox, e);
+        }        
     }
 }

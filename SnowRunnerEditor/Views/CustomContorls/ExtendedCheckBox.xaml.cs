@@ -16,13 +16,24 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace SnowRunnerEditor.Views.ProjectCreation
+namespace SnowRunnerEditor.Views.CustomContorls
 {
-    public sealed partial class ProjectCreateAdvanced : UserControl
+    public sealed partial class ExtendedCheckBox : UserControl
     {
-        public ProjectCreateAdvanced()
+        public string Label { get; set; } = string.Empty;
+
+        public CheckBox CheckBox => Box;
+        public TextBlock TextBlock => Lbl;
+
+        public ExtendedCheckBox()
         {
-            InitializeComponent();
+            InitializeComponent();           
+        }
+
+        public void BlockCheckBox(bool set, bool value)
+        {
+            Box.IsEnabled = !set;
+            Box.IsChecked = value;
         }
     }
 }

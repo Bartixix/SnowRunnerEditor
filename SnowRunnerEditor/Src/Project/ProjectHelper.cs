@@ -3,6 +3,7 @@ using SnowRunnerEditor.Game.Pak;
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Text.Json;
 
 
 namespace SnowRunnerEditor.Src.Project
@@ -41,7 +42,7 @@ namespace SnowRunnerEditor.Src.Project
         public PakHelper PakHelper { get; }
         public LoadListHelper LoadListHelper { get; }
 
-        public ProjectHelper(string name, FileInfo originalPak, FileInfo initialPak, FileInfo loadListFile, FileInfo sharedPak, FileInfo sharedSoundPak, DirectoryInfo projectDir, DateTime created, DateTime lastModified)
+        private ProjectHelper(string name, FileInfo originalPak, FileInfo initialPak, FileInfo loadListFile, FileInfo sharedPak, FileInfo sharedSoundPak, DirectoryInfo projectDir, DateTime created, DateTime lastModified)
         {
             Name = name;
             OriginalPak = originalPak;
@@ -51,11 +52,10 @@ namespace SnowRunnerEditor.Src.Project
             SharedSoundPak = sharedSoundPak;
 
             ProjectDir = projectDir;
-            InitialUnpacked = new($"{ProjectDir.FullName}\\initial");
+            InitialUnpacked = new($"{ProjectDir.FullName}\\initial-unpacked");
 
             Created = created;
             LastModified = lastModified;            
-
 
             PakHelper = new(InitialPak, InitialUnpacked, LoadListFile);
             LoadListHelper = new(InitialUnpacked, LoadListFile, SharedPak, SharedSoundPak);
@@ -80,18 +80,17 @@ namespace SnowRunnerEditor.Src.Project
             LoadListHelper = new(InitialUnpacked, LoadListFile, SharedPak, SharedSoundPak);
         }
 
-        public static async Task Create(string name, FileInfo originalPak, FileInfo initialPak, FileInfo loadListFile, FileInfo sharedPak, FileInfo sharedSoundPak, DirectoryInfo initialUnpacked)
+        public static void Create(string name, FileInfo originalPak, FileInfo initialPak, FileInfo loadListFile, FileInfo sharedPak, FileInfo sharedSoundPak, DirectoryInfo projectDir)
         {
-            ProjectHelper project = new(name, originalPak, initialPak, loadListFile, sharedPak, sharedSoundPak, initialUnpacked, DateTime.UtcNow, DateTime.UtcNow);
-            await project.SetupProject();
+            ProjectHelper project = new(name, originalPak, initialPak, loadListFile, sharedPak, sharedSoundPak, projectDir, DateTime.UtcNow, DateTime.UtcNow);
 
             Current = project;
             ProjectLoaded = true;
         }
 
-        public static void LoadProject(string name, FileInfo originalPak, FileInfo initialPak, FileInfo loadListFile, FileInfo sharedPak, FileInfo sharedSoundPak, DirectoryInfo initialUnpacked, DateTime created, DateTime lastModified)
+        public static void LoadProject(string name, FileInfo originalPak, FileInfo initialPak, FileInfo loadListFile, FileInfo sharedPak, FileInfo sharedSoundPak, DirectoryInfo proejctDir, DateTime created, DateTime lastModified)
         {
-            ProjectHelper project = new(name, originalPak, initialPak, loadListFile, sharedPak, sharedSoundPak, initialUnpacked, created, lastModified);
+            ProjectHelper project = new(name, originalPak, initialPak, loadListFile, sharedPak, sharedSoundPak, proejctDir, created, lastModified);
 
             Current = project;
             ProjectLoaded = true;
@@ -105,10 +104,12 @@ namespace SnowRunnerEditor.Src.Project
             ProjectLoaded = true;
         }
 
-        private async Task SetupProject()
+        public async Task SaveToDefault()
         {
-            PakHelper pk = new(OriginalPak, InitialUnpacked, LoadListFile);
-            await pk.Unpack();
+            ProjectStorage storage = new(this);
+
+            string jsonStr = JsonSerializer.Serialize(storage);
+            await File.WriteAllTextAsync($"{ProjectDir}\\project.json", jsonStr);
         }
     }
 }

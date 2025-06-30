@@ -19,8 +19,10 @@
                     <MenuFlyoutItem Text="Open" Click="LoadProject"/>
                     <MenuFlyoutItem Text="Create" Click="CreateProject"/>
                 </MenuFlyoutSubItem>
-                <!--<MenuFlyoutItem Text="TestFunc" Click="TestFunc"/>
-                <MenuFlyoutItem Text="TestFunc2" Click="TestFunc2"/>-->
+                <MenuFlyoutItem Text="TestUnpack" Click="TestUnpack"/>
+                <MenuFlyoutItem Text="TestPack" Click="TestPack"/>
+                <MenuFlyoutItem Text="TestCmp" Click="TestCmp"/>
+                <MenuFlyoutItem Text="TestDialog" Click="TestContendDialog"/>
                 <MenuFlyoutSeparator/>
                 <MenuFlyoutItem Text="Exit"/>
             </MenuBarItem>

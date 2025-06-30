@@ -59,9 +59,9 @@ namespace SnowRunnerEditor.Src
             if (Compared) throw new Exception("Already compared");
 
             List<FileInfo> filesFirst = [.. FirstFolder.GetFiles("*", SearchOption.AllDirectories)];
-            List<FileInfo> filesSecond = [.. FirstFolder.GetFiles("*", SearchOption.AllDirectories)];
+            List<FileInfo> filesSecond = [.. SecondFolder.GetFiles("*", SearchOption.AllDirectories)];
 
-            List<FileInfo> both = [..filesFirst.Where(f => filesSecond.Any(s =>
+            List<FileInfo> both = [..filesFirst.FindAll(f => filesSecond.Any(s =>
             {
                 string realtiveFrist = f.FullName[FirstFolder.FullName.Length..];
                 string relativeSecond = s.FullName[SecondFolder.FullName.Length..];
@@ -111,15 +111,24 @@ namespace SnowRunnerEditor.Src
             Compared = true;
         }
 
-        public static void Write(FileStream fs, List<StorageFile> files)
+        public void WriteAll(string rootDir)
         {
-            int offset = 0;
-            foreach (StorageFile file in files)
+            using FileStream fsDiff = new($"{rootDir}\\diff.txt", FileMode.Create, FileAccess.Write, FileShare.Read);
+            using FileStream fsOld = new($"{rootDir}\\old.txt", FileMode.Create, FileAccess.Write, FileShare.Read);
+            using FileStream fsNew = new($"{rootDir}\\new.txt", FileMode.Create, FileAccess.Write, FileShare.Read);
+
+            Write(fsDiff, DifferentFiles);
+            Write(fsOld, OldFiles);
+            Write(fsNew, NewFiles);
+        }
+
+        public static void Write(FileStream fs, List<FileInfo> files)
+        {
+            foreach (FileInfo file in files)
             {
-                string str = $"{file.Path}\n";
+                string str = $"{file.FullName}\n";
                 byte[] buff = Encoding.UTF8.GetBytes(str);
                 fs.Write(buff, 0, buff.Length);
-                offset += buff.Length;
             }
         }
     }
